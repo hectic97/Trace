@@ -1,0 +1,6 @@
+﻿  practice.c
+practice.obj : error LNK2019: ListInit 외부 기호(참조 위치: main 함수)에서 확인하지 못했습니다.
+practice.obj : error LNK2019: LInsert 외부 기호(참조 위치: main 함수)에서 확인하지 못했습니다.
+practice.obj : error LNK2019: LFirst 외부 기호(참조 위치: main 함수)에서 확인하지 못했습니다.
+practice.obj : error LNK2019: LNext 외부 기호(참조 위치: main 함수)에서 확인하지 못했습니다.
+C:\Users\집\VSsource\Proj\x64\Debug\Proj.exe : fatal error LNK1120: 4개의 확인할 수 없는 외부 참조입니다.

@@ -26,7 +26,7 @@ void RadixSort(int arr[], int num, int maxlen)
 		divfac *= 10;
 	}
 }
-int main(void)
+int main3(void)
 {
 	int arr[7] = { 13,212,14,7141,10987,6,15 };
 	int len = 7;

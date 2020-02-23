@@ -1,27 +1,34 @@
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
+int* MakePsm(void)
+{
+	static int Psm[102];
+	for (int i = 0; i < 102; i++)
+		Psm[i] = i * i;
+	return Psm;
+}
 int main(void)
 {
-	int iter;
-	int x1,y1,r1,x2,y2,r2;
-	scanf("%d",&iter);
-	int results[iter];
-	for (int i = 0; i < iter; i++)
+	int m, n;
+	scanf("%d %d",&m,&n);
+	int* Psm = MakePsm();
+	int i = 0;
+	int j = 100;
+	while (Psm[i] < m)
+		i++;
+	while (Psm[j] > n)
+		j--;
+	if (Psm[i] > n || Psm[j] < m)
 	{
-		scanf("%d %d %d %d %d %d",&x1,&y1,&r1,&x2,&y2,&r2);
-		int d = (pow((x2 - x1), 2) + pow((y2 - y1), 2));
-		if (x1 == x2 && x2 == y2 && r1 == r2)
-			results[i] = -1;
-		else if (pow((r2 - r1),2) > d || pow((r1 + r2),2) < d)
-			results[i] = 0;
-		else if (pow((r1 - r2),2) == d || pow((r1 + r2),2) == d)
-			results[i] = 1;
-		else
-			results[i] = 2;
-
+		printf("%d", -1);
+		return 0;
 	}
-	for (int i = 0; i < iter; i++)
-		printf("%d\n", results[iter]);
+	int sum = 0;
+	int smallest = Psm[i];
+	for (; i <= j; i++)
+		sum += Psm[i];
+	printf("%d\n%d", sum,smallest);
 	return 0;
+
+	
 }

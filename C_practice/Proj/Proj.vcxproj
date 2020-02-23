@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BST.c" />
     <ClCompile Include="InterpolSearch.c" />
     <ClCompile Include="practice.c" />
     <ClCompile Include="RadixSort.c" />

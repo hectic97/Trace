@@ -1,2 +1,3 @@
 ﻿  p.c
-  Baekjoon.vcxproj -> C:\Users\집\VSsource\Proj\Debug\Baekjoon.exe
+C:\Users\집\Notebook\C_practice\Baekjoon\p.c(8): warning C4172: 지역 변수 또는 임시: Psm의 주소를 반환하고 있습니다.
+  Baekjoon.vcxproj -> C:\Users\집\Notebook\C_practice\Proj\Debug\Baekjoon.exe

@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="ArrayBaseStack.h" />
     <ClInclude Include="ArrayList.h" />
+    <ClInclude Include="AVLRebalance.h" />
     <ClInclude Include="BinarySearchTree.h" />
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="BinaryTree2.h" />

@@ -1,34 +1,31 @@
 #include <stdio.h>
-#include <stdlib.h>
-int* MakePsm(void)
+typedef struct
 {
-	static int Psm[102];
-	for (int i = 0; i < 102; i++)
-		Psm[i] = i * i;
-	return Psm;
-}
+	int weight;
+	int height;
+	int rank;
+}Info;
+
 int main(void)
 {
-	int m, n;
-	scanf("%d %d",&m,&n);
-	int* Psm = MakePsm();
-	int i = 0;
-	int j = 100;
-	while (Psm[i] < m)
-		i++;
-	while (Psm[j] > n)
-		j--;
-	if (Psm[i] > n || Psm[j] < m)
+	int i, iter,j;
+	Info info[50];
+	scanf("%d", &iter);
+	for (i = 0; i < iter; i++)
 	{
-		printf("%d", -1);
-		return 0;
+		scanf("%d %d", &info[i].weight, &info[i].height);
+		info[i].rank = 1;
 	}
-	int sum = 0;
-	int smallest = Psm[i];
-	for (; i <= j; i++)
-		sum += Psm[i];
-	printf("%d\n%d", sum,smallest);
+	for (i = 0; i < iter; i++)
+	{
+		for (j = 0; j < iter; j++)
+		{
+			if (info[i].weight < info[j].weight&& info[i].height < info[j].height)
+				(info[i].rank)++;
+		}
+	}
+	for (i = 0; i < iter; i++)
+		printf("%d ", info[i].rank);
 	return 0;
 
-	
 }

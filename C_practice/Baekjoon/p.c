@@ -1,82 +1,137 @@
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct _loc
+#include <string.h>
+#include <math.h>
+
+
+typedef struct _node
 {
-	int x;
-	int y;
-}Loc;
-void MergeTwoArea(Loc arr[], int left, int mid, int right)
+	int data;
+	struct _node* next;
+	struct _node* before;
+}Node;
+typedef struct _stack
 {
-	int fIdx = left;
-	int rIdx = mid + 1;
-	int i;
+	Node* head;
+	Node* tail;
+	int numOfData;
 
-	Loc* sortArr = (Loc*)malloc(sizeof(Loc) * (right + 1));
-	int sIdx = left;
+}Stack;
 
-	while (fIdx <= mid && rIdx <= right)
+void InitStack(Stack* st)
+{
+	st->head = NULL;
+	st->tail = NULL;
+	st->numOfData = 0;
+}
+
+void Push(Stack* st, int data)
+{
+	Node* newNode = (Node*)malloc(sizeof(Node));
+	newNode->data = data;
+	newNode->next = NULL;
+	
+	if (st->numOfData == 0)
 	{
-		if (arr[fIdx].y < arr[rIdx].y)
-			sortArr[sIdx] = arr[fIdx++];
-		else if (arr[fIdx].y == arr[rIdx].y && arr[fIdx].x < arr[rIdx].x)
-			sortArr[sIdx] = arr[fIdx++];
-		else if (arr[fIdx].y == arr[rIdx].y && arr[fIdx].x > arr[rIdx].x)
-			sortArr[sIdx] = arr[rIdx++];
-
-		else
-			sortArr[sIdx] = arr[rIdx++];
-		sIdx++;
+		st->head = newNode;
+		newNode->before = NULL;
 	}
-
-
-
-	if (fIdx > mid)
-	{
-		for (i = rIdx; i <= right; i++, sIdx++)
-			sortArr[sIdx] = arr[i];
-	}
+		
 	else
 	{
-
-		for (i = fIdx; i <= mid; i++, sIdx++)
-			sortArr[sIdx] = arr[i];
+		newNode->before = st->tail;
+		st->tail->next = newNode;
 	}
-	for (i = left; i <= right; i++)
-	{
-		arr[i] = sortArr[i];
-	}
-	free(sortArr);
+		
+	
+	st->tail = newNode;
+	(st->numOfData)++;
 }
-void MergeSort(Loc* arr, int left, int right)
+
+int Size(Stack* st)
 {
-	int mid;
-
-	if (left < right)
-	{
-		mid = (left + right) / 2;
-
-		MergeSort(arr, left, mid);
-		MergeSort(arr, mid + 1, right);
-
-		MergeTwoArea(arr, left, mid, right);
-	}
+	return st->numOfData;
 }
 
+int Empty(Stack* st)
+{
+	if (Size(st) == 0)
+		return 1;
+	else
+		return 0;
+}
+
+int Top(Stack* st)
+{
+	if (Empty(st))
+		return -1;
+	return st->tail->data;
+}
+
+int Pop(Stack* st)
+{
+	if (Empty(st))
+		return -1;
+	Node* dNode;
+	dNode = st->tail;
+	int ddata = dNode->data;
+	
+	if (st->tail->before ==NULL)
+	{
+		st->head = NULL;
+		st->tail = NULL;
+		
+		
+	}
+	else {
+		st->tail = st->tail->before;
+		st->tail->next = NULL;
+	}
+	
+	free(dNode);
+	(st->numOfData)--;
+	
+	return ddata;
+
+}
+int getnum(char input[])
+{
+	int len = strlen(input)-1;
+	double num = 0,i=0;
+	for (;len>=5;len--)
+	{
+		num += pow(10, i) * (input[len] - 48);
+		i++;
+	}
+	return num;
+}
 int main(void)
 {
-
-	int i, iter, n;
-	scanf("%d", &iter);
-	Loc* locations = (Loc*)malloc(sizeof(Loc) * iter);
-	for (i = 0; i < iter; i++)
+	int iter;
+	scanf("%d",&iter);
+	
+	
+	
+	Stack stack;
+	InitStack(&stack);
+	char input[13];
+	for (int i = 0; i < iter; i++)
 	{
-		scanf("%d %d", &locations[i].x, &locations[i].y);
-	}
-	MergeSort(locations, 0, iter - 1);
-	for (i = 0; i < iter; i++)
-	{
-		printf("%d %d\n", locations[i].x, locations[i].y);
+		while (getchar() != '\n');
+		scanf("%[^\n]s",input);
+		
+		if (input[1] == 'u')
+			Push(&stack, getnum(input));
+		else if (input[0] == 't')
+			printf("%d\n", Top(&stack));
+		else if (input[0] == 's')
+			printf("%d\n", Size(&stack));
+		else if (input[0] == 'e')
+			printf("%d\n", Empty(&stack));
+		else
+			printf("%d\n", Pop(&stack));
+		
+		
 	}
 	return 0;
-
 }

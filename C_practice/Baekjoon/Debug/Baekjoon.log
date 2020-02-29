@@ -1,3 +1,2 @@
 ﻿  p.c
-C:\Users\집\Notebook\C_practice\Baekjoon\p.c(106,12): warning C4244: 'return': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Baekjoon.vcxproj -> C:\Users\집\Notebook\C_practice\Proj\Debug\Baekjoon.exe

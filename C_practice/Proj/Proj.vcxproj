@@ -145,6 +145,7 @@
     <ClCompile Include="RecursiveBinarySearch.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ALGraph.h" />
     <ClInclude Include="ArrayBaseStack.h" />
     <ClInclude Include="ArrayList.h" />
     <ClInclude Include="AVLRebalance.h" />

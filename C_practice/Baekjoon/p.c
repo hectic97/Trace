@@ -1,47 +1,111 @@
 #include <stdio.h>
-int Isinpl(int cx, int cy, int cr, int x, int y)
+#include <stdlib.h>
+typedef struct
 {
-	if ((cx - x) * (cx - x) + (cy - y) * (cy - y) < cr * cr)
-		return 1;
+	int orgindex;
+	int data;
+	int finalindex;
+}Num;
+void MergeTwoArea(Num arr[], int left, int mid, int right, int bydata)
+{
+	int fIdx = left;
+	int rIdx = mid + 1;
+	int i;
+
+	Num* sortArr = (Num*)malloc(sizeof(Num) * (right + 1));
+	int sIdx = left;
+	if (bydata == 0)
+	{
+		while (fIdx <= mid && rIdx <= right)
+		{
+			if (arr[fIdx].data <= arr[rIdx].data)
+				sortArr[sIdx] = arr[fIdx++];
+
+			else
+				sortArr[sIdx] = arr[rIdx++];
+			sIdx++;
+		}
+
+	}
 	else
-		return 0;
+	{
+		while (fIdx <= mid && rIdx <= right)
+		{
+			if (arr[fIdx].orgindex <= arr[rIdx].orgindex)
+				sortArr[sIdx] = arr[fIdx++];
+
+			else
+				sortArr[sIdx] = arr[rIdx++];
+			sIdx++;
+		}
+	}
+
+
+
+	if (fIdx > mid)
+	{
+		for (i = rIdx; i <= right; i++, sIdx++)
+			sortArr[sIdx] = arr[i];
+	}
+	else
+	{
+
+		for (i = fIdx; i <= mid; i++, sIdx++)
+			sortArr[sIdx] = arr[i];
+	}
+	for (i = left; i <= right; i++)
+	{
+		arr[i] = sortArr[i];
+	}
+	free(sortArr);
 }
-typedef struct _planetary
+void MergeSort(Num* arr, int left, int right, int bydata)
 {
-	int cx;
-	int cy;
-	int cr;
-}Pl;
+	int mid;
+
+	if (left < right)
+	{
+		mid = (left + right) / 2;
+
+		MergeSort(arr, left, mid, bydata);
+		MergeSort(arr, mid + 1, right, bydata);
+
+		MergeTwoArea(arr, left, mid, right, bydata);
+	}
+}
 int main(void)
 {
-	int i, iter,plnum,x1,x2,y1,y2,count;
+	Num arr[50];
+	int i,j,iter;
 	scanf("%d", &iter);
 	for (i = 0; i < iter; i++)
 	{
-		scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
-		Pl pl[50] = { 0,0,0, };
-		scanf("%d", &plnum);
-		count = 0;
-		for (int j = 0; j < plnum; j++)
-		{
-			scanf("%d %d %d", &pl[j].cx, &pl[j].cy, &pl[j].cr);
-			if (Isinpl(pl[j].cx, pl[j].cy, pl[j].cr, x1, y1) && Isinpl(pl[j].cx, pl[j].cy, pl[j].cr, x2, y2))
-				continue;
-			else if (!Isinpl(pl[j].cx, pl[j].cy, pl[j].cr, x1, y1) && !Isinpl(pl[j].cx, pl[j].cy, pl[j].cr, x2, y2))
-				continue;
-			else
-				count++;
-
-		}
-		printf("%d\n", count);
-
+		scanf("%d",&arr[i].data);
+		arr[i].orgindex = i;
+		arr[i].finalindex = 0;
 		
-
 	}
+
+
+	MergeSort(arr,0,iter-1,0);
+	MergeSort(arr, 0, iter-1, 1);
+	for (i = 0; i < iter; i++)
+		for (j = 0; j < iter; j++)
+		{
+			if (arr[i].data > arr[j].data  )
+				(arr[i].finalindex)++;
+			
+		
+		}
+	for (i = 0; i < iter; i++)
+	{
+		for (j = 0; j < i; j++)
+		{
+			if (arr[i].finalindex == arr[j].finalindex)
+				arr[i].finalindex++;
+		}
+	}
+	for (i = 0; i < iter; i++)
+		printf("%d ", arr[i].finalindex);
 	return 0;
-	
-	
-
-
-	
 }

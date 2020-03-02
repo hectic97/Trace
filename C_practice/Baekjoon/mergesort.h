@@ -3,34 +3,45 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct _loc
+typedef struct
 {
-	int x;
-	int y;
-}Loc;
-void MergeTwoArea(Loc arr[], int left, int mid, int right)
+	int orgindex;
+	int data;
+}Num;
+void MergeTwoArea(Num arr[], int left, int mid, int right, int bydata)
 {
 	int fIdx = left;
 	int rIdx = mid + 1;
 	int i;
 
-	Loc* sortArr = (Loc*)malloc(sizeof(Loc) * (right + 1));
+	Num* sortArr = (Num*)malloc(sizeof(Num) * (right + 1));
 	int sIdx = left;
-
-	while (fIdx <= mid && rIdx <= right)
+	if (bydata == 0)
 	{
-		if (arr[fIdx].y < arr[rIdx].y)
-			sortArr[sIdx] = arr[fIdx++];
-		else if (arr[fIdx].y == arr[rIdx].y && arr[fIdx].x < arr[rIdx].x)
-			sortArr[sIdx] = arr[fIdx++];
-		else if (arr[fIdx].y == arr[rIdx].y && arr[fIdx].x > arr[rIdx].x)
-			sortArr[sIdx] = arr[rIdx++];
+		while (fIdx <= mid && rIdx <= right)
+		{
+			if (arr[fIdx].data <= arr[rIdx].data)
+				sortArr[sIdx] = arr[fIdx++];
 
-		else
-			sortArr[sIdx] = arr[rIdx++];
-		sIdx++;
+			else
+				sortArr[sIdx] = arr[rIdx++];
+			sIdx++;
+		}
+
 	}
+	else
+	{
+		while (fIdx <= mid && rIdx <= right)
+		{
+			if (arr[fIdx].orgindex <= arr[rIdx].orgindex)
+				sortArr[sIdx] = arr[fIdx++];
 
+			else
+				sortArr[sIdx] = arr[rIdx++];
+			sIdx++;
+		}
+	}
+	
 
 
 	if (fIdx > mid)
@@ -50,7 +61,7 @@ void MergeTwoArea(Loc arr[], int left, int mid, int right)
 	}
 	free(sortArr);
 }
-void MergeSort(Loc* arr, int left, int right)
+void MergeSort(Num* arr, int left, int right, int bydata)
 {
 	int mid;
 
@@ -58,10 +69,10 @@ void MergeSort(Loc* arr, int left, int right)
 	{
 		mid = (left + right) / 2;
 
-		MergeSort(arr, left, mid);
-		MergeSort(arr, mid + 1, right);
+		MergeSort(arr, left, mid,bydata);
+		MergeSort(arr, mid + 1, right,bydata);
 
-		MergeTwoArea(arr, left, mid, right);
+		MergeTwoArea(arr, left, mid, right,bydata);
 	}
 }
 #endif

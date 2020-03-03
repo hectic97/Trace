@@ -1,12 +1,17 @@
 #include <stdio.h>
+#define ARR_LEN 50
+#ifndef __MERGESORT_H__
+#define __MERGESORT_H__
+
+#include <stdio.h>
 #include <stdlib.h>
 typedef struct
 {
 	int orgindex;
 	int data;
-	int finalindex;
 }Num;
-void MergeTwoArea(Num arr[], int left, int mid, int right, int bydata)
+
+void MergeTwoArea(Num arr[], int left, int mid, int right, int ascending)
 {
 	int fIdx = left;
 	int rIdx = mid + 1;
@@ -14,7 +19,7 @@ void MergeTwoArea(Num arr[], int left, int mid, int right, int bydata)
 
 	Num* sortArr = (Num*)malloc(sizeof(Num) * (right + 1));
 	int sIdx = left;
-	if (bydata == 0)
+	if (ascending == 1)
 	{
 		while (fIdx <= mid && rIdx <= right)
 		{
@@ -31,7 +36,7 @@ void MergeTwoArea(Num arr[], int left, int mid, int right, int bydata)
 	{
 		while (fIdx <= mid && rIdx <= right)
 		{
-			if (arr[fIdx].orgindex <= arr[rIdx].orgindex)
+			if (arr[fIdx].data >= arr[rIdx].data)
 				sortArr[sIdx] = arr[fIdx++];
 
 			else
@@ -59,7 +64,7 @@ void MergeTwoArea(Num arr[], int left, int mid, int right, int bydata)
 	}
 	free(sortArr);
 }
-void MergeSort(Num* arr, int left, int right, int bydata)
+void MergeSort(Num* arr, int left, int right, int ascending)
 {
 	int mid;
 
@@ -67,45 +72,38 @@ void MergeSort(Num* arr, int left, int right, int bydata)
 	{
 		mid = (left + right) / 2;
 
-		MergeSort(arr, left, mid, bydata);
-		MergeSort(arr, mid + 1, right, bydata);
+		MergeSort(arr, left, mid, ascending);
+		MergeSort(arr, mid + 1, right, ascending);
 
-		MergeTwoArea(arr, left, mid, right, bydata);
+		MergeTwoArea(arr, left, mid, right, ascending);
 	}
 }
+#endif
 int main(void)
 {
-	Num arr[50];
-	int i,j,iter;
+	int iter, i;
+	Num A[ARR_LEN];
+	Num B[ARR_LEN];
 	scanf("%d", &iter);
 	for (i = 0; i < iter; i++)
 	{
-		scanf("%d",&arr[i].data);
-		arr[i].orgindex = i;
-		arr[i].finalindex = 0;
-		
+		scanf("%d", &A[i].data);
+		A[i].orgindex = i;
 	}
-
-
-	MergeSort(arr,0,iter-1,0);
-	MergeSort(arr, 0, iter-1, 1);
-	for (i = 0; i < iter; i++)
-		for (j = 0; j < iter; j++)
-		{
-			if (arr[i].data > arr[j].data  )
-				(arr[i].finalindex)++;
-			
-		
-		}
 	for (i = 0; i < iter; i++)
 	{
-		for (j = 0; j < i; j++)
-		{
-			if (arr[i].finalindex == arr[j].finalindex)
-				arr[i].finalindex++;
-		}
+		scanf("%d", &B[i].data);
+		B[i].orgindex = i;
 	}
+	MergeSort(A, 0, iter - 1, 0);
+	MergeSort(B, 0, iter - 1, 1);
+	int Final[ARR_LEN];
+	int sum = 0;
 	for (i = 0; i < iter; i++)
-		printf("%d ", arr[i].finalindex);
+		sum += A[i].data * B[i].data;
+	
+	printf("%d", sum);
 	return 0;
+
+
 }

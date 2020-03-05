@@ -1,27 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
 int main(void)
 {
-	int n, m, a, i,j;
-	int count = 0;
-	int arr[50];
-	int arr2[50]; 
-	scanf("%d %d", &n, &m);
-	for (i = 1; i <= n; i++)
-		arr[i] = i;
-	for (i = 0; i < m; i++)
+	int a,num;
+	num = 0;
+	for (int i = 0; i < 5; i++)
 	{
-		scanf("%d", &arr2[i]);
-
+		scanf("%d", &a);
+		num += a * a;
 	}
-	if (arr2[0] - 1 <= n)
-		count += arr2[0] - 1;
-
-	for (i = 0; i < m; i++)
-	{
-		
-	}
-	
-	
+	printf("%d", num % 10);
+	return 0;
 }
-

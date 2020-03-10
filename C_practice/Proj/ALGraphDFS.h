@@ -27,7 +27,7 @@ void GraphInit(ALGraph* pg, int nv)
 	for (i = 0; i < nv; i++)
 	{
 		ListInit(&(pg->adjList[i]));
-		SetSortRule(&(pg->adjList[i]), WhoIsPrecede)
+		SetSortRule(&(pg->adjList[i]), WhoIsPrecede);
 	}
 	pg->visitInfo = (int*)malloc(sizeof(int) * pg->numV);// 정점수 만큼 배열생성
 	memset(pg->visitInfo, 0, sizeof(int) * pg->numV);

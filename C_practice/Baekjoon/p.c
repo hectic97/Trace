@@ -1,65 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
-typedef int Num;
-void MergeTwoArea(Num arr[], int left, int mid, int right)
+#include <math.h>
+int main(void)
 {
-	int fIdx = left;
-	int rIdx = mid + 1;
-	int i;
-
-	Num* sortArr = (Num*)malloc(sizeof(Num) * (right + 1));
-	int sIdx = left;
+	int n, i,j;
+	int sx, sy, px, py;
+	scanf("%d",&n);
 	
-	while (fIdx <= mid && rIdx <= right)
-	{
-		if (arr[fIdx] <= arr[rIdx])
-			sortArr[sIdx] = arr[fIdx++];
-
-		else
-			sortArr[sIdx] = arr[rIdx++];
-		sIdx++;
+	int** arr;
+	arr = (int**)malloc(sizeof(int*) * n);
+	for (int i = 0; i < n; i++) {
+		arr[i] = (int*)malloc(sizeof(int) * n);
 	}
 	
 		
-	if (fIdx > mid)
-	{
-		for (i = rIdx; i <= right; i++, sIdx++)
-			sortArr[sIdx] = arr[i];
-	}
-	else
-	{
-
-		for (i = fIdx; i <= mid; i++, sIdx++)
-			sortArr[sIdx] = arr[i];
-	}
-	for (i = left; i <= right; i++)
-	{
-		arr[i] = sortArr[i];
-	}
-	free(sortArr);
-}
-void MergeSort(Num* arr, int left, int right)
-{
-	int mid;
-
-	if (left < right)
-	{
-		mid = (left + right) / 2;
-
-		MergeSort(arr, left, mid);
-		MergeSort(arr, mid + 1, right);
-
-		MergeTwoArea(arr, left, mid, right);
-	}
-}
-int main(void)
-{
-	int n, k,i;
-	scanf("%d %d",&n,&k);
-	int* arr = (int*)malloc(sizeof(int) * n);
 	for (i = 0; i < n; i++)
-		scanf("%d",&arr[i]);
-	MergeSort(arr, 0, n - 1);
-	printf("%d",arr[k - 1]);
+		for (j = 0; j < n; j++)
+		{
+			scanf("%d",&arr[i][j]);
+			if (arr[i][j] == 2)
+			{
+				sx = i, sy = j;
+			}
+			else if (arr[i][j] == 5)
+				px = i, py = j;
+		
+		}
+	
+	
+	int count = 0;
+			
+	for (i = sx > px ? px : sx; i <= (sx > px ? sx : px); i++)
+		for (j = sy > py ? py : sy; j <= (sy > py ? sy : py); j++)
+			if (arr[i][j] == 1)
+				count++;
+	
+	if (count >= 3 && pow(abs(px-sx),2)+pow(abs(py-sy),2)>=25)
+		printf("1");
+	else
+		printf("0");
 	return 0;
 }

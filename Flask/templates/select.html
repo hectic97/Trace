@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fast Movie Recommender</title>
+    <style>
+        body{background-color: rgba(2, 2, 2, 0.7);}
+    </style>
+</head>
+<body>
+<div style="font:italic bold 1.3em/1em Georgia,serif;text-align:center;font-size:30px">
+    <h1>MOVIE RECOMMENDATION SYSTEM</h1>
+</div>
+
+
+    <a href="/info"><p style="text-align:right;font-size:24px" >information</p></a>
+    <p style="font-size:26px">Check your favorite movies and Submit</p>
+
+    <form method="POST" action="/">
+
+
+        {%for j in range(2004,2021)%}
+            <h2 style="color:#FFFFFF;font-size:30px">{{j}}</h2>
+
+            {%for i in range(50)%}
+
+            <label>
+                <img src="static/image/{{j}}{{i+1}}.png" width="100",height="100">
+                <input type="checkbox" name="chosen_movie" value="{{(j-2004)*50+i}}">
+        <!--            <input type='checkbox' name='thing' value='valuable' id="thing"/><label for="thing"></label>-->
+            </label>
+            {%endfor%}
+        {%endfor%}
+        <br>
+        <br>
+        <center><input type="submit" value="Submit!" style="height:100px;width:600px;font-size:50px;"></center>
+    </form>
+</body>
+</html>

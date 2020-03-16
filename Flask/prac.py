@@ -3,13 +3,14 @@ from flask import Flask, render_template,url_for,request,redirect
 app = Flask(__name__)
 
 chosen_movies=[]
-@app.route('/info')
+
+@app.route('/fmr/info')
 def info():
 	return render_template('info.html')
 
-@app.route('/user/<name>')
-def user(name):
-	return render_template('name.html', name=name)
+@app.route('/')
+def home():
+	return render_template('home.html')
 
 
 # @app.route('/pandas')
@@ -45,16 +46,17 @@ def user(name):
 #         temp1 = request.args.get('char1')
 #         return render_template('submit.html',num=temp,char1=temp1)
 
-@app.route('/',methods=['GET','POST'])
+@app.route('/fmr', methods=['POST','GET'])
 def select():
     if request.method == 'POST':
         print(request.form.getlist('chosen_movie'))
         global chosen_movies
         chosen_movies=request.form.getlist('chosen_movie')
         print(chosen_movies)
-        return redirect('/result')
+        return redirect('/fmr/result')
     return render_template('select.html')
-@app.route('/result')
+
+@app.route('/fmr/result')
 def results():
     import pandas as pd
     import numpy as np
@@ -83,8 +85,12 @@ def results():
     new_df = new_df.rename(columns={'movie_name': 'MOVIE', 'movie_rating': 'Rating', 'movie_genre_split': 'Genre',
                           'movie_director_split': 'Director', 'movie_actor_split': 'Cast'})
 
-    return new_df.to_html(justify='center')
+    return'<h1>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;###### TOP 10 MOVIES FOR YOU #####</h1>'+new_df.to_html(justify='center')+"<a href='/fmr'><br>Go Back</a>"
 
 
 if __name__ == '__main__':
 	app.run(debug=True,threaded=True)
+
+"""<div style = "font:italic bold 1.1em/1em 'Georgia',serif;text-align:center;font-size:26px;color:#FFFFFF">
+<h1> Movie recommendation system </h1>
+</div>"""

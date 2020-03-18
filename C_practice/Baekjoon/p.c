@@ -1,14 +1,35 @@
 #include <stdio.h>
-typedef struct
-{
-	int time;
-	int pay;
-}Day;
+#include <stdlib.h>
 int main(void)
 {
-	int i,n;
-	Day day[15];
-	for(i=0;i<n;i++)
-		scanf("%d %d",&day[i].time,&day[i].pay)
+	int i,j,p, n, yoojin;
+	scanf("%d %d %d", &n, &yoojin, &p);
+	int* ranker = (int*)malloc(sizeof(int) * n);
+	if (n == 0)
+	{
+		printf("1");
+		return 0;
+	}
+		
+	for (i = 0; i < n; i++)
+		scanf("%d", &ranker[i]);
+	int larger = 0,same=0;
 	
+	for (i = 0; i < n; i++)
+	{
+		if (ranker[i] > yoojin)
+			larger++;
+		else if (ranker[i] == yoojin)
+			same++;
+		else if (ranker[i] < yoojin)
+			break;
+
+	}
+	if (larger + same < p)
+		printf("%d", larger + 1);
+	else
+		printf("-1");
+	return 0;
+	
+
 }

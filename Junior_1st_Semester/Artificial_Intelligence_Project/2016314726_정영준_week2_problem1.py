@@ -33,8 +33,13 @@ y2.append(forward_propagation([1,1,1], w2))
 
 print('Third table answer')
 #input: [y1,y2,b] and [w31,w32,w33]
+print("If x1: 0 x2: 0")
 forward_propagation([y1[0],y2[0],1], w3, True)
+print("\nIf x1: 0 x2: 1")
 forward_propagation([y1[1],y2[1],1], w3, True)
+print("\nIf x1: 1 x2: 0")
 forward_propagation([y1[2],y2[2],1], w3, True)
+print("\nIf x1: 1 x2: 1")
 forward_propagation([y1[3],y2[3],1], w3, True)
+
 

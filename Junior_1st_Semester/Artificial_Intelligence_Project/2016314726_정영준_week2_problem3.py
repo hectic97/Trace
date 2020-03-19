@@ -1,5 +1,5 @@
 Data = [(0.0,0.0),(1.0,1.0),(1.0,2.0),(2.0,1.0)]
-from sympy import *            # I can't help using sympy package to solve eqiation and describe variable
+from sympy import *            # I can't help using sympy package to solve equation and describe variables
 w0, w1, w2 = symbols('w0 w1 w2') # w0, w1, w2 are variable
 w = [w0,w1,w2]                   # w list contains all weights
 def forward(input,w):            # define function that derives output

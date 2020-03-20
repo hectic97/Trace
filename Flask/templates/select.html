@@ -14,23 +14,23 @@
 
 
     <a href="/fmr/info"><p style="text-align:right;font-size:24px" >information</p></a>
-    <p style="font-size:36px;color:#FFFFFF;font:italic bold 1.2em/1em Georgia;">Check your favorite movies and Submit</p>
+    <p style="font-size:36px;color:#FFFFFF;font:italic bold 1.2em/1em Georgia;">Click a year and Check your favorite movies and Submit</p>
 
     <form method="POST" action="/fmr">
 
 
         {%for j in range(2004,2021)%}
-            <h2 style="color:#FFFFFF;font-size:30px">{{j}}</h2>
+            <details>
+            <summary><h2 style="color:#FFFFFF;font-size:30px;cursor:pointer">{{j}}</h2></summary>
 
 
             {%for i in range(50)%}
 
-            <label>
                 <img src="static/image/{{j}}{{i+1}}.jpg" width="100",height="100">
                 <input type="checkbox" name="chosen_movie" value="{{(j-2004)*50+i}}">
-        <!--            <input type='checkbox' name='thing' value='valuable' id="thing"/><label for="thing"></label>-->
-            </label>
+
             {%endfor%}
+            </details>
         {%endfor%}
         <br>
         <br>

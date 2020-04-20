@@ -1,2 +1,75 @@
- #include <stdio.h> int dp[41]; int fibonacci(int n){ if(n <= 0){ dp[0] = 0; return 0; }else if(n ==1){ dp[1] = 1; return 1; } if(dp[n] != 0){ // 계산된 값 return dp[n]; } else { return dp[n] = fibonacci(n-1) + fibonacci(n-2); } } int main(void){ int test; scanf("%d", &test); while(test-- > 0){ int x; scanf("%d", &x); if(x == 0){ printf("%d %d\n", 1, 0); }else if(x == 1){ printf("%d %d\n", 0, 1); }else{ fibonacci(x); printf("%d %d\n", dp[x-1], dp[x]); } } return 0; }?
-
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct _Node
+{
+	int data;
+	struct _Node* next;
+}Node;
+void printList(Node* head)
+{
+	Node* ptr = head;
+	while (ptr)
+	{
+		printf("%d ", ptr->data);
+		printf("-> ");
+		ptr = ptr->next;
+	}
+	printf("NULL");
+	printf("\n");
+}
+void push(Node** head, int data)
+{
+	Node* newNode =
+		(Node*)malloc(sizeof(Node));
+	newNode->data = data;
+	newNode->next = *head;
+	*head = newNode;
+}
+void Remove(Node* head)
+{
+	Node* start = head;
+	Node* ptr = (Node*)malloc(sizeof(Node));
+	Node* before;
+	while (start->next != NULL)
+	{
+		
+		ptr = start;
+		while (ptr->next != NULL)
+		{
+			before = ptr;
+			ptr = ptr->next;
+			if (start->data == ptr->data)
+			{
+				if (ptr->next != NULL)
+				{
+					before->next = ptr->next;
+					free(ptr);
+				}
+				else
+				{
+					free(ptr);
+					before->next = NULL;
+				}
+				ptr = malloc(sizeof(Node));
+				ptr = before;
+			}
+		}
+		if (start->next == NULL)
+			break;
+		start = start->next;
+	}
+}
+int main()
+{
+	int N, list[100];
+	scanf("%d", &N);
+	for (int i = 0; i < N; i++)
+		scanf("%d", &list[i]);
+	Node* head = NULL;
+	for (int i = N - 1; i >= 0; i--)
+		push(&head, list[i]);
+	printList(head);
+	Remove(head);
+	printList(head);
+	return 0;
+}

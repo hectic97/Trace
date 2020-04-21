@@ -1,10 +1,12 @@
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdlib.h>
-typedef struct _Node
-{
-	int data;
-	struct _Node* next;
+
+typedef struct _Node 
+{ 
+	int data; 
+	struct _Node* next; 
 }Node;
+
 void printList(Node* head)
 {
 	Node* ptr = head;
@@ -19,57 +21,98 @@ void printList(Node* head)
 }
 void push(Node** head, int data)
 {
-	Node* newNode =
-		(Node*)malloc(sizeof(Node));
+	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->data = data;
-	newNode->next = *head;
+	newNode->next = *head; 
 	*head = newNode;
 }
-void Remove(Node* head)
+Node* Reserve(Node* head, int g)
 {
-	Node* start = head;
-	Node* ptr = (Node*)malloc(sizeof(Node));
-	Node* before;
-	while (start->next != NULL)
+	int i, j,temp;
+	int remainder = 0;       
+	Node* from = head;
+	Node* end;
+	Node* freeptr = head;
+	Node* start;
+	
+	while (remainder == 0)  //remainder == 0 means absoulte part
 	{
+		freeptr = from;
 		
-		ptr = start;
-		while (ptr->next != NULL)
+		int count = 1;
+		for (i = 0; i < g-1; i++)
 		{
-			before = ptr;
-			ptr = ptr->next;
-			if (start->data == ptr->data)
+			if (freeptr->next == NULL)
 			{
-				if (ptr->next != NULL)
-				{
-					before->next = ptr->next;
-					free(ptr);
-				}
-				else
-				{
-					free(ptr);
-					before->next = NULL;
-				}
-				ptr = malloc(sizeof(Node));
-				ptr = before;
+				remainder = 1;
+				break;
 			}
+			freeptr = freeptr->next;
+			count++;
 		}
-		if (start->next == NULL)
-			break;
-		start = start->next;
+		
+		if (remainder == 0)
+		{
+			end = freeptr;
+			
+			start = from;
+			for (i = 0; i < g / 2; i++)
+			{
+				
+				freeptr = start;
+				temp = from->data;
+				for (j = 0; j < g - i-1; j++)
+					freeptr = freeptr->next;
+				from->data = freeptr->data;
+				
+				freeptr->data = temp;
+				
+				from = from->next;
+				
+			}
+			if (end->next == NULL)
+				remainder = 1;
+			else
+				from = end->next;
+
+		}
+		else
+		{
+			end = freeptr;
+			freeptr = from;
+
+			for (i = 0; i < count / 2; i++)
+			{
+				freeptr = from;
+				temp = from->data;
+				for (j = 0; j < count - i-1; j++)
+					freeptr = freeptr->next;
+				from->data = freeptr->data;
+				freeptr->data = temp;
+				from = from->next;
+			}
+			
+		}
+		
 	}
+	
+	return head;
+	
+	
+
 }
 int main()
 {
-	int N, list[100];
+	int N, list[100], g;
 	scanf("%d", &N);
 	for (int i = 0; i < N; i++)
 		scanf("%d", &list[i]);
 	Node* head = NULL;
+	scanf("%d", &g);
 	for (int i = N - 1; i >= 0; i--)
 		push(&head, list[i]);
 	printList(head);
-	Remove(head);
+	head = Reserve(head, g);
 	printList(head);
 	return 0;
 }

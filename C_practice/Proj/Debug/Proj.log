@@ -1,6 +1,12 @@
 ﻿  BST.c
 C:\Users\집\Notebook\C_practice\Proj\Table2.h(27,17): error C2064: 항은 341개의 인수를 받아들이는 함수로 계산되지 않습니다.
+C:\Users\집\Notebook\C_practice\Proj\Table2.h(30,35): warning C4133: '함수': 'Slot *'과(와) 'LData *' 사이의 형식이 호환되지 않습니다.
+C:\Users\집\Notebook\C_practice\Proj\Table2.h(39,39): warning C4133: '함수': 'Slot *'과(와) 'LData *' 사이의 형식이 호환되지 않습니다.
 C:\Users\집\Notebook\C_practice\Proj\Table2.h(54,17): error C2064: 항은 341개의 인수를 받아들이는 함수로 계산되지 않습니다.
+C:\Users\집\Notebook\C_practice\Proj\Table2.h(57,35): warning C4133: '함수': 'Slot *'과(와) 'LData *' 사이의 형식이 호환되지 않습니다.
+C:\Users\집\Notebook\C_practice\Proj\Table2.h(66,39): warning C4133: '함수': 'Slot *'과(와) 'LData *' 사이의 형식이 호환되지 않습니다.
 C:\Users\집\Notebook\C_practice\Proj\Table2.h(82,17): error C2064: 항은 341개의 인수를 받아들이는 함수로 계산되지 않습니다.
-C:\Users\집\Notebook\C_practice\Proj\BST.c(18,28): warning C4047: '함수': 'HashFunc *'의 간접 참조 수준이 'int (__cdecl *)(Key)'과(와) 다릅니다.
+C:\Users\집\Notebook\C_practice\Proj\Table2.h(91,29): error C2440: '함수': 'Slot'에서 'LData'(으)로 변환할 수 없습니다.
+C:\Users\집\Notebook\C_practice\Proj\Table2.h(91,29): warning C4024: 'LInsert': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+C:\Users\집\Notebook\C_practice\Proj\BST.c(18,28): warning C4047: '함수': 'HashFunc *'의 간접 참조 수준이 'int (__cdecl *)(int)'과(와) 다릅니다.
 C:\Users\집\Notebook\C_practice\Proj\BST.c(18,28): warning C4024: 'TBLInit': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.

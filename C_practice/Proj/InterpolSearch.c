@@ -19,3 +19,12 @@
 //		return ISearch(ar, first, mid - 1, target);
 //
 //}
+#include <stdio.h>
+int main(void)
+{
+	int a = 3;
+	int b;
+	b = a;
+	b++;
+	printf("%d %d", a, b);
+}

@@ -58,7 +58,7 @@ void Remove(Node* head)
 			break;
 		start = start->next;
 	}
-}
+}s
 int main()
 {
 	int N, list[100];

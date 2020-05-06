@@ -1,136 +1,236 @@
-#include<stdio.h>
-#define ARR_LEN 1000
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
 
-int visit[12][12];
-int maze[12][12];
+typedef char Data;
 
-typedef struct _node {
-    int x;
-    int y;
+typedef struct _node
+{
+	Data data;
+	struct _node* next;
 }Node;
 
-typedef struct _queue
+typedef struct _stack
 {
-    Node node[ARR_LEN];
-    int tail;
-    int head;
-}Queue;
+	Node* head;
+}Stack;
 
-void InitQueue(Queue* q)
+void InitStack(Stack* st)
 {
-    q->tail = 0;
-    q->head = 0;
+	st->head = NULL;
 }
 
-
-int x_move[4] = { 0,0,1,-1 };
-int y_move[4] = { 1, -1, 0, 0 };
-
-
-Node Deque(Queue* q) 
+int IsEmpty(Stack* st)
 {
-    Node delNode = q->node[q->head];
-    (q->head)++;
-    return delNode;
+	if (st->head == NULL)
+		return 1;
+	else
+		return 0;
 }
 
-int Empty(Queue *q) 
+void Push(Stack* st, Data data)
 {
-    if (q->head == q->tail) 
-        return 0;
-    else
-        return 1;
+	Node* postNode = (Node*)malloc(sizeof(Node));
+
+	postNode->data = data;
+	postNode->next = st->head;
+	st->head = postNode;
+
 }
 
-void Enque(Queue *q,int y, int x)
+Data Pop(Stack* st)
 {
-    Node newNode = { x,y };
-    q->node[q->tail] = newNode;
-    (q->tail)++;
+	char rd;
+	Node* rnode;
+
+	if (IsEmpty(st))
+		exit(-1);
+	rd = st->head->data;
+	rnode = st->head;
+
+	st->head = st->head->next;
+	free(rnode);
+	return rd;
 }
 
-void BFS(Queue*q,int n,int m)
+Data Peek(Stack* st)
 {
-    int to_x, to_y;
-    while (Empty(q))
-    {
-        Node f = Deque(q);
-        for (int i = 0; i < 4; i++) 
-        {
-            to_x = f.x + x_move[i];
-            to_y = f.y + y_move[i];
-            if (to_x >= 1 && to_x <= m && to_y >= 1 && to_y <= n)  
-                if (maze[to_y][to_x] == 0)
-                    if (visit[to_y][to_x] == 0)
-                    {
-                        visit[to_y][to_x] = visit[f.y][f.x] + 1;
-                        Enque(q,to_y, to_x);
-                    }
-                
-            
-        }
-    }
+	if (IsEmpty(st))
+		exit(-1);
+	return st->head->data;
 }
 
+int Oplevel(char op)
+{
+	switch (op)
+	{
+	case '*':
+	case '/':
+		return 3;
+	case '+':
+	case '-':
+		return 2;
+	case '(':
+		return 1;
+	}
+	return -1;
+}
+
+char* In2Post(char a[])
+{
+	Stack stack;
+	int len = strlen(a);
+	char* post = (char*)malloc(2*(len+1));
+
+	int i, idx = 0;
+	char b, c;
+	memset(post, 0, sizeof(char) * 2*(len + 1));
+	InitStack(&stack);
+
+	for (i = 0; i < len; i++)
+	{
+		b = a[i];
+		//printf("B: %c\n", b);
+		if (('0' <= b && b <= '9'))
+		{
+			while ('0' <= a[i] && a[i] <= '9')
+			{
+				post[idx++] = a[i++];
+				//printf("num idx: %d\n", idx-1);
+
+			}
+			post[idx++] = ' ';
+			i--;
+		}
+		else if (b == 'x')
+		{
+			post[idx++] = 'x';
+			post[idx++] = ' ';
+		}
+		else
+		{
+			switch (b)
+			{
+			case '(':
+				
+				Push(&stack, b);
+				//printf("STACKIN '(\n");
+				break;
+			case ')':
+				while (1)
+				{
+					c = Pop(&stack);
+					if (c == '(')
+						break;
+					//printf("PEEK ele:%c\n", Peek(&stack));
+					post[idx++] = c;
+					post[idx++] = ' ';
+					//printf(")STACKOUT\n");
+				}
+				break;
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+				while (!IsEmpty(&stack) && (Oplevel(Peek(&stack)) >= Oplevel(b)))
+				{
+					post[idx++] = Pop(&stack);
+					post[idx++] = ' ';
+				}
+				Push(&stack, b);
+				//printf("%c IN STACK!\n", Peek(&stack));
+				break;
+			}
+		}
+	}
+
+	while (!IsEmpty(&stack))
+	{
+		post[idx++] = Pop(&stack);
+		post[idx++] = ' ';
+	}
+	post[idx - 1] = 0;
+	return post;
+	//strcpy(a, post);
+	
+}
+
+char* X2int(char post[],char num)
+{
+	char* x2intpost = malloc(sizeof(char) * 300);
+	strcpy(x2intpost, post);
+	for (int i = 0; i < strlen(x2intpost); i++)
+	{
+		if (x2intpost[i] == 'x')
+			x2intpost[i] = num;
+	}
+	return x2intpost;
+}
+
+int CalPost(char* post)
+{
+	typedef int Data;
+	Stack stack;
+	InitStack(&stack);
+	int len = strlen(post);
+	//printf("LEN OF POST : %d\n", len);
+	//printf("%ld\n", strtol(&post[0], NULL, 10));
+	Push(&stack, (int)strtol(&post[0], NULL, 10));
+	//printf("PUSH FIN\n");
+	for (int i = 1; i < len; i++)
+	{
+		//printf("LOOP\n");
+		if (post[i] == ' ')
+			continue;
+		else if (isdigit(post[i - 1]) && isdigit(post[i]))
+			continue;
+		else if (isdigit(post[i]) && (post[i - 1] == ' '))
+			Push(&stack, strtol(&post[i], NULL, 10));
+		else
+		{
+			int op2 = Pop(&stack);
+			int op1 = Pop(&stack);
+			switch(post[i])
+			{
+			case '+': Push(&stack, op1+op2); break;
+			case '-': Push(&stack, op1 - op2); break;
+			case '*': Push(&stack, op1 * op2); break;
+			
+			}
+		}
+
+	}
+	return Peek(&stack);
 
 
+}
 int main(void)
 {
-    int i, j, m, n;
-    scanf("%d %d", &n, &m);
-    int min = m * n + 1;
-    for (i = 1; i <= n; i++)
-        for (j = 1; j <= m; j++)
-            scanf("%1d", &maze[i][j]);
-    Queue queue;
-    InitQueue(&queue);
-    if (m == 1 && n == 1)
-    {
-        printf("%d", 1);
-        return 0;
-    }
-    visit[1][1] = 1;
-    Enque(&queue, 1, 1);
-    BFS(&queue, n, m);
-    if (visit[n][m] <= min && visit[n][m]!=0)
-        min = visit[n][m];
+	char A[101];
+	int P, M;
+	scanf("%s", A);
+	scanf("%d %d",&P,&M);
+	char post[202];
+	strcpy(post,In2Post(A));
+	
+	//printf("%s\n", post);
+	int i=9;
+	int min = 10;
+	int result;
+	for (i; i >= 1; i--)
+	{
+		char x2intpost[300];
+		//printf("HERE\n");
+		strcpy(x2intpost, X2int(post, i+48));
+		//printf("COPY COM\n");
+		//printf("%s", x2intpost);
+		result=CalPost(x2intpost);
+		if (result % M == P)
+			min = i;
 
-
-    if (maze[1][1] != 1) // wall at the start point,spend a chance to break the wall   
-    {
-        for (i = 1; i <= n; i++)
-            for (j = 1; j <= m; j++)
-            {
-                for (int k = 1; k <= n; k++)
-                    for (int l = 1; l <= m; l++)
-                        visit[k][l] = 0;
-                Queue queue;
-                InitQueue(&queue);
-                int change = 0;
-                if (maze[i][j] == 1)
-                {
-                    maze[i][j] = 0;
-                    change = 1;
-                }
-                visit[1][1] = 1;
-                Enque(&queue, 1, 1);
-                BFS(&queue, n, m);
-              
-                if (visit[n][m] <= min && visit[n][m]!=0)
-                    min = visit[n][m];
-
-                if (change==1)
-                    maze[i][j] = 1;
-            }
-    }
-    
-    if (min == n * m + 1)
-    {
-        printf("%d", -1);
-        return 0;
-    }
-    printf("%d", min);
-    return 0;
-    
+	}
+	printf("%d", min);
+	return 0;
 }
-//

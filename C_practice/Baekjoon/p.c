@@ -9,6 +9,7 @@ typedef char Data;
 typedef struct _node
 {
 	Data data;
+	int Calnum;
 	struct _node* next;
 }Node;
 
@@ -40,6 +41,16 @@ void Push(Stack* st, Data data)
 
 }
 
+void CalPush(Stack* st, int data)
+{
+	Node* postNode = (Node*)malloc(sizeof(Node));
+
+	postNode->Calnum = data;
+	postNode->next = st->head;
+	st->head = postNode;
+
+}
+
 Data Pop(Stack* st)
 {
 	char rd;
@@ -55,13 +66,32 @@ Data Pop(Stack* st)
 	return rd;
 }
 
+int CalPop(Stack* st)
+{
+	int rd;
+	Node* rnode;
+
+	if (IsEmpty(st))
+		exit(-1);
+	rd = st->head->Calnum;
+	rnode = st->head;
+
+	st->head = st->head->next;
+	free(rnode);
+	return rd;
+}
 Data Peek(Stack* st)
 {
 	if (IsEmpty(st))
 		exit(-1);
 	return st->head->data;
 }
-
+int CalPeek(Stack* st)
+{
+	if (IsEmpty(st))
+		exit(-1);
+	return st->head->Calnum;
+}
 int Oplevel(char op)
 {
 	switch (op)
@@ -171,13 +201,14 @@ char* X2int(char post[],char num)
 
 int CalPost(char* post)
 {
-	typedef int Data;
+	
 	Stack stack;
 	InitStack(&stack);
 	int len = strlen(post);
 	//printf("LEN OF POST : %d\n", len);
-	//printf("%ld\n", strtol(&post[0], NULL, 10));
-	Push(&stack, (int)strtol(&post[0], NULL, 10));
+	//printf("STACK : %ld\n", strtol(&post[0], NULL, 10));
+	CalPush(&stack, (int)strtol(&post[0], NULL, 10));
+	//printf("First word : %c,STACK: %d\n", post[0], CalPeek(&stack));
 	//printf("PUSH FIN\n");
 	for (int i = 1; i < len; i++)
 	{
@@ -187,22 +218,28 @@ int CalPost(char* post)
 		else if (isdigit(post[i - 1]) && isdigit(post[i]))
 			continue;
 		else if (isdigit(post[i]) && (post[i - 1] == ' '))
-			Push(&stack, strtol(&post[i], NULL, 10));
+		{
+
+			CalPush(&stack, (int)strtol(&post[i], NULL, 10));
+			//printf("want to push :%d\n", (int)strtol(&post[i], NULL, 10));
+			//printf("ind %d word : %c,STACK: %d\n" ,i,post[i],CalPeek(&stack));
+		}
+			
 		else
 		{
-			int op2 = Pop(&stack);
-			int op1 = Pop(&stack);
+			int op2 = CalPop(&stack);
+			int op1 = CalPop(&stack);
 			switch(post[i])
 			{
-			case '+': Push(&stack, op1+op2); break;
-			case '-': Push(&stack, op1 - op2); break;
-			case '*': Push(&stack, op1 * op2); break;
+			case '+': CalPush(&stack, op1+op2); break;
+			case '-': CalPush(&stack, op1 - op2); break;
+			case '*': CalPush(&stack, op1 * op2); break;
 			
 			}
 		}
 
 	}
-	return Peek(&stack);
+	return CalPeek(&stack);
 
 
 }
@@ -225,10 +262,13 @@ int main(void)
 		//printf("HERE\n");
 		strcpy(x2intpost, X2int(post, i+48));
 		//printf("COPY COM\n");
-		//printf("%s", x2intpost);
+		//printf("%s\n", x2intpost);
+		
 		result=CalPost(x2intpost);
 		if (result % M == P)
 			min = i;
+			
+		
 
 	}
 	printf("%d", min);

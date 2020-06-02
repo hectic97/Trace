@@ -1,301 +1,158 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <stdio.h>
 #include <string.h>
+#define MAX_HEAP 100
 
+typedef enum { false, true } bool;
 
-typedef int Data;
-
-void MergeTwoArea(Data arr[], int left, int mid, int  right)
+typedef struct {
+	char small;
+	char middle;
+	char large;
+} Penta_num;
+typedef struct {
+	Penta_num data; // This is a priority as well as data
+} PNode;
+typedef struct {
+	PNode items[MAX_HEAP+ 1];
+	int num;
+} Heap;
+void InitHeap(Heap* pheap);
+bool IsEmpty(Heap* pheap);
+bool IsFull(Heap* pheap);
+void Insert(Heap* pheap, Penta_num data);
+Penta_num Delete(Heap* pheap);
+void HeapSort(Penta_num a[], int n);
+Penta_num* CreatePentaNum(int n);
+void GetInput();
+int main() {
+	GetInput();
+	/*
+	5
+	0E0
+	321
+	EEE
+	CCC
+	3D0
+	*/
+	return 0;
+}
+void HeapSort(Penta_num a[], int n) {
+	Heap heap;
+	InitHeap(&heap);
+	// Insert all elements to the heap.
+	for (int i = 0; i < n; i++)
+		Insert(&heap, a[i]);
+	// Remove all elements from the heap.
+	for (int i = 0; i <= n - 1; i++)
+		a[i] = Delete(&heap);
+	for (int i = 0; i < n; i++)
+		printf("%c%c%c\n", a[i].large, a[i].middle, a[i].small);
+}
+Penta_num* CreatePentaNum(int n){
+	char a[4];
+	Penta_num* res = (Penta_num*)malloc(sizeof(Penta_num) * (n));
+	for (int i = 0; i < n; i++) {
+		scanf("%s", a);
+		res[i].large = a[0];
+		res[i].middle = a[1];
+		res[i].small = a[2];
+	}
+	return res;
+}
+void GetInput() {
+	int n;
+	Penta_num* data;
+	scanf("%d", &n);
+	data = CreatePentaNum(n);
+	HeapSort(data, n);
+}
+/* Modify from here */
+void InitHeap(Heap* pheap)
 {
-	int fidx = left;
-	int ridx = mid + 1;
-	int i;
+	pheap->num = 0;
+}
 
-	Data* sortArr = (Data*)malloc(sizeof(Data) * (right + 1));
-	int sidx = left;
+bool IsEmpty(Heap* pheap)
+{
+	return pheap->num == 0;
+}
 
-	while (fidx <= mid && ridx <= right)
+bool IsFull(Heap* pheap)
+{
+	return pheap->num == MAX_HEAP;
+}
+
+bool PriorityCheck(Penta_num data1, Penta_num data2) 
+{
+	if (data1.large > data2.large)
+		return false;
+	else if (data1.large < data2.large)
+		return true;
+	else if (data1.middle > data2.middle)
+		return false;
+	else if (data1.middle < data2.middle)
+		return true;
+	else if (data1.small > data2.small)
+		return false;
+	else if (data1.small < data2.small)
+		return true;
+	
+	return true;
+}
+
+void Insert(Heap* pheap, Penta_num data)
+{
+	PNode newNode;
+	int idx = pheap->num + 1;
+	if (IsFull(pheap))
+		exit(1);
+	while (idx > 1)
 	{
-		if (arr[fidx] >= arr[ridx])
-			sortArr[sidx] = arr[fidx++];
+		int parent = idx / 2;
+		if (PriorityCheck(data, pheap->items[parent].data))
+		{
+			pheap->items[idx] = pheap->items[parent];
+			idx = parent;
+		}
 		else
-			sortArr[sidx] = arr[ridx++];
-		sidx++;
+			break;
 	}
+	newNode.data = data;
+	pheap->items[idx] = newNode;
+	pheap->num++;
+}
 
-	if (fidx > mid)
-	{
-		for (i = ridx; i <= right; i++, sidx++)
-			sortArr[sidx] = arr[i];
-	}
+int WhoFirst(Heap* pheap,int idx)
+{
+	if (idx * 2 > pheap->num)
+		return 0;
+	else if (idx * 2 == pheap->num)
+		return idx * 2;
 	else
 	{
-		for (i = fidx; i <= mid; i++, sidx++)
-			sortArr[sidx] = arr[i];
+		if (PriorityCheck(pheap->items[idx * 2 + 1].data, pheap->items[idx * 2].data))
+			return idx * 2 + 1;
+		else
+			return idx * 2;
 	}
-	for (i = left; i <= right; i++)
-		arr[i] = sortArr[i];
-	free(sortArr);
-
 }
 
-void MergeSort(Data arr[], int left, int right)
+Penta_num Delete(Heap* pheap)
 {
-	int mid;
-	if (left < right)
+	Penta_num del = pheap->items[1].data;
+	PNode last = pheap->items[pheap->num];
+	int parent = 1;
+	int child;
+	while (child = WhoFirst(pheap, parent))
 	{
-		mid = (left + right) / 2;
-		MergeSort(arr, left, mid);
-		MergeSort(arr, mid + 1, right);
-		MergeTwoArea(arr, left, mid, right);
-	}
-}
-void SearchHeap(int num[], int comb[], int n, int numofdata,int floor,int select_idx[],int version);
-void GetComb(int num[], int comb[], int n, int floor, int numofdata, int version)
-{
-	int a, b, c, d;
-	int leftn = n - num[0];
-	int idx = 0;
-	memset(comb, 0, 5);
-	//printf("FLOOR GETCOMB: %d\n", floor);
-	comb[0] = num[0];
-	
-	switch (floor)
-	{
-	case 2:
-		for (a = 1; a < numofdata; a++)
-		{
-			if (num[a] == leftn && num[a] != num[0])
-			{
-				comb[0] = num[0];
-				comb[1] = num[a];
-				int select_idx[5] = { 0,a,-1,-1,-1 };
-				SearchHeap(num, comb, n, numofdata, floor, select_idx,version);
-			}
-			
-			memset(comb, 0, 5);
-		}
-				
-				
-			
-		break;
-	case 3:
-		for (a = 1; a < numofdata-1; a++)
-			for (b = a+1; b < numofdata; b++)
-			{
-				if (num[a] + num[b]  == leftn && num[0] != num[a] && num[a] != num[b])
-				{
-					comb[0] = num[0];
-					comb[1] = num[a];
-					comb[2] = num[b];
-					int select_idx[5] = { 0,a,b,-1,-1 };
-					SearchHeap(num, comb, n, numofdata, floor, select_idx,version);
-				}
-				
-				memset(comb, 0, 5);
-
-			}
-				
-		break;
-	case 4:
-		for (a = 1; a < numofdata - 2; a++)
-			for (b = a + 1; b < numofdata - 1; b++)
-				for (c = b + 1; c < numofdata; c++)
-				{
-					if (num[a] + num[b] + num[c]  == leftn && num[0] != num[a] && num[a] != num[b] && num[b] != num[c])
-					{
-						comb[0] = num[0];
-						comb[1] = num[a];
-						comb[2] = num[b];
-						comb[3] = num[c];
-						int select_idx[5] = { 0,a,b,c,-1 };
-						SearchHeap(num, comb, n, numofdata, floor, select_idx,version);
-					}
-					
-					memset(comb, 0, 5);
-
-				}
-					
-		break;
-	case 5:
-		for (a = 0; a < numofdata - 4; a++)
-			for (b = a + 1; b < numofdata - 3; b++)
-				for (c = b + 1; c < numofdata - 2; c++)
-					for (d = c + 1; d < numofdata-1; d++)
-					{
-						if (num[a] + num[b] + num[c] + num[d]  == leftn && num[0] != num[a] && num[b] != num[a] && num[c] != num[b] && num[d] != num[c])
-						{
-							comb[0] = num[0];
-							comb[1] = num[a];
-							comb[2] = num[b];
-							comb[3] = num[c];
-							comb[4] = num[d];
-							int select_idx[5] = { 0,a,b,c,d };
-							SearchHeap(num, comb, n, numofdata, floor,select_idx,version);
-						}
-						
-						memset(comb, 0, 5);
-
-					}
-						
-		break;
-	}
-	
-		
-		
-}
-void arrayCopy(int a[], int b[], int n)
-{
-	int i;
-	for (i = 0; i < n; i++) {
-		b[i] = a[i];
-	}
-}
-void PrintPreorder(int tree[],int startidx)
-{
-	if (tree[startidx] == 0)
-		return;
-	else if (startidx > 30)
-		return;
-	printf("%d ", tree[startidx]);
-	PrintPreorder(tree, 2 * startidx);
-	PrintPreorder(tree, 2 * startidx + 1);
-}
-void SearchHeap(int num[], int comb[], int n, int numofdata, int floor,int select_idx[],int version)
-{
-	int arr[30] = { 0, };
-	arrayCopy(num, arr, numofdata);
-	int tree[31] = { 0, };
-	int i;
-	for (i = 0; i < numofdata; i++)
-		if (num[i] == comb[floor - 1])
+		if (PriorityCheck(last.data, pheap->items[child].data))
 			break;
-	if ((int)pow(2, floor - 1) - 2 >= i)
-		i = (int)pow(2, floor - 1) - 1;
-	int idx = i + 1;
-	int s_idx = 0;
-	if (version == 2)
-		idx = (int)pow(2, floor) - 1;
-	
-	for (i = floor; i > 0; i--)
-	{
-		tree[idx] = comb[i - 1];
-		arr[select_idx[s_idx++]] = 0;
-		//printf("IDX : %d NUM : %d\n", idx, comb[i - 1]);
-		idx = idx / 2;
-
+		pheap->items[parent] = pheap->items[child];
+		parent = child;
 	}
-	
-	
-	
-	int tree_idx = 1;
-	int arr_idx = 0;
-	int error = 0;
-	while (1)
-	{
-		if (tree[tree_idx] == 0)
-		{
-			while (arr[arr_idx] == 0)
-			{
-				arr_idx++;
-				if (arr_idx == numofdata)
-				{
-					error = 1;
-					break;
-				}
-			}
-			while (tree[tree_idx / 2] <= arr[arr_idx] || arr[arr_idx]==0)
-			{
-				
-				arr_idx++;
-				if (arr_idx == numofdata)
-				{
-					error = 1;
-					break;
-				}
-			}
-			if (error == 1)
-				break;
-			
-				
-			tree[tree_idx] = arr[arr_idx];
-			//printf("INSERT IDX: %d, VALUE: %d, insertidx :%d\n", tree_idx, arr[arr_idx],arr_idx);
-			arr[arr_idx] = 0;
-		}
-		arr_idx = 0;
-		tree_idx++;
-		if (tree_idx > numofdata)
-			break;
-	}
-	if (error == 0)
-	{
-		PrintPreorder(tree, 1);
-		exit(0);
-	}
-		
-
-	
-	
+	pheap->items[parent] = last;
+	pheap->num -= 1;
+	return del;
 }
-int mai2n(void)
-{
-	int num[30];
-	int comb[5] = { 0, };
-	int n,i;
-	int numofdata;
-	scanf("%d", &numofdata);
-	for (i = 0; i < numofdata; i++)
-		scanf("%d",&num[i]);
-	scanf("%d", &n);
-	
-	if (numofdata == 1)
-	{
-		if (n == num[0])
-			printf("%d", num[0]);
-		return 0;
-	}
-	else if (numofdata == 2)
-	{
-		if (n == num[0] + num[1])
-		{
-			MergeSort(num,0,numofdata-1);
-			printf("%d %d", num[0], num[1]);
-		}
-		return 0;
-	}
-	else if (numofdata == 3)
-	{
-		MergeSort(num,0,numofdata-1);
-		if (((num[0] + num[1]) || (num[0] + num[2])) == n)
-			printf("%d %d %d", num[0], num[1], num[2]);
-		return 0;
-	}
-	int floor_1 = 0 , floor_2 = 0;
-	MergeSort(num,0,numofdata-1);
-	for (i = 2; i < 5; i++)
-	{
-		if (((int)pow(2, i) - 1 < numofdata) && (numofdata <= (int)pow(2, i + 1) - 3))
-		{
-			floor_1 = i+1;
-			floor_2 = i ;
-			break;
-		}
-		else if (((int)pow(2, i + 1) - 3 < numofdata) && (numofdata <= (int)pow(2, i + 1) - 1))
-		{
-			floor_1 = i + 1;
-			break;
-		}
-			
-	}
-	//printf("FLOOR: %d\n", floor_1);
-	//printf("FLOOR_2 : %d\n", floor_2);
-	GetComb(num, comb, n, floor_1, numofdata,1);
-	if (floor_2 != 0)
-	{
-		GetComb(num, comb, n, floor_2, numofdata,2);
-	}
-		
-	return 0;
-
-}
+/* Modify to here */

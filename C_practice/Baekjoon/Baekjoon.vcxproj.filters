@@ -18,6 +18,9 @@
     <ClCompile Include="p.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="2.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mergesort.h">

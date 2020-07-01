@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>js_array</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <script>
+        document.write("Array<BR>");
+        var frontback_lang = ['html','css','js','python','java'];
+    </script>
+    <script>
+        document.write(frontback_lang[0])
+    </script>
+    <h2>count</h2>
+    <script>
+        document.write("#"+frontback_lang.length+" lang")
+    </script>
+    <h2>add, append, push</h2>
+    <script>
+        frontback_lang.push("ruby");
+        frontback_lang.push("php");
+        document.write(frontback_lang[5]+' '+frontback_lang[6]);
+    </script>
+    <h2>Loop</h2>
+    <ul>
+    <script>
+        document.write('<li>1</li>');
+        var a = 3;
+        while(a){
+            document.write('<li>2</li>');
+            a -= 1;
+        }
+        document.write('<li>3</li>');
+        document.write('<li>4</li>');    
+    </script>
+    </ul>
+    <h1>Loop & Array</h1>
+    <h2>Langs</h2>
+    <script>
+        var Langs = ['python','C like','JavaScript','Go'];
+    </script>
+    <ul>
+        <!-- <li>python</li>
+        <li>C like</li>
+        <li>JavaScript</li>
+        <li>Go</li> -->
+        <script>
+            var i = 0;
+            while(i < Langs.length){
+                document.write('<li>'+Langs[i]+'</li>');
+                i ++;
+            }
+        </script>
+        
+    </ul>
+    <script>
+        var c = document.querySelectorAll('li');
+        var j = 0;
+        while(j<c.length){
+            console.log(c[j]);
+            c[j].style.color = 'blue';
+            j++;
+        }
+    </script>
+
+</body>
+</html>

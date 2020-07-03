@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <article>
+
+        </article>
+        <input type="button" value="fetch" onclick="
+        /*fetch('example').then(function(response){
+            response.text().then(function(text){
+            document.querySelector('article').innerHTML = text;
+                
+            })
+        })*/
+        // function callbackme(){
+        //     console.log('response end');
+        // }
+        // callbackme = function (){
+        //     console.log('response end');
+        // }
+        
+        fetch('example').then(function(response){  //fetch('not exist file') -> response status : 404
+        // response sever의 응답 관련 정보를 가지고 있는 Obj
+            console.log(response);
+            if (response.status =='404'){
+                alert('Not found')
+            }
+        }); /*fetch('a') client requests server 'a'*/
+        console.log(1);
+        console.log(2);
+        //Asynchronous - 병렬적
+        ">
+        
+    </body>
+</html>

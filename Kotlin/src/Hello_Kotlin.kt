@@ -6,6 +6,12 @@ fun sum(x:int,y:int){
     return x+y
 }
 
+fun minus(x:int, y:int)
+{
+
+    return x-y
+}
+
 fun multiply(x:int,y:int){
     return x*y
 }

@@ -4,7 +4,7 @@ var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
-var sanitizeHtml = require('sanitize-html');
+// var sanitizeHtml = require('sanitize-html');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -35,13 +35,13 @@ var app = http.createServer(function(request,response){
           var filteredId = path.parse(queryData.id).base;
           fs.readFile(`data/${filteredId}`,'utf-8',function(err,description){ 
             var title = queryData.id;
-            var sanitizedTitle = sanitizeHtml(title);
-            var sanitizedDescription = sanitizeHtml(description);
+            // var sanitizedTitle = sanitizeHtml(title);
+            // var sanitizedDescription = sanitizeHtml(description);
             var list = template.list(filelist);
-            var html= template.html(sanitizedTitle, list, `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
-            `<a href ="/create">create</a> <a href="/update?id=${sanitizedTitle}">update</a>
+            var html= template.html(title, list, `<h2>${title}</h2>${description}`,
+            `<a href ="/create">create</a> <a href="/update?id=${title}">update</a>
             <form action="/delete_process" method="POST">
-            <input type="hidden" name="id" value="${sanitizedTitle}">
+            <input type="hidden" name="id" value="${title}">
             <input type= "submit" value="delete">
             </form>`);
             
@@ -166,6 +166,52 @@ var app = http.createServer(function(request,response){
           response.writeHead(302, {Location: '/'});
           response.end();
         });
+      });
+
+    }
+    else if (pathname === '/login')
+    {
+      fs.readdir('./data',function(error,filelist)
+        {
+          var title = 'Login'; 
+          var list = template.list(filelist); 
+          var html = template.html(title, list,`
+          <form action="login_process" method="post">
+            <p><input type="text" name="email" placeholder="email"></p>
+            <p><input type="password" name="password" placeholder="password"></p>
+            <p><input type="submit"></p>
+          </form>`,`<a href="/create">create</a>`); 
+          response.writeHead(200);
+          response.end(html);
+       }) //fs.readdir end
+    }
+    else if (pathname === '/login_process')
+    {
+      var body = '';
+      request.on('data',function(data){
+        body = body + data;
+      
+      });
+      request.on('end',function(){
+        var post = qs.parse(body);
+        if(post.email === 'hello' && post.password === 'world')
+        {
+          response.writeHead(302,{
+            'Set-cookie':[
+              `email=${post.email}`,
+              `password=${post.password}`,
+              `nickname=aa`
+            ],
+            Location:'/'
+          });
+          response.end();
+        }
+        else
+        {
+          response.end('Not Authorized');
+        }
+        
+        
       });
 
     }

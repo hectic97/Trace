@@ -4,7 +4,35 @@ var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
+var cookie = require('cookie');
 // var sanitizeHtml = require('sanitize-html');
+function authIsOwner(request,response){
+    var isOwner = false;
+    var cookies = {}
+    if (request.headers.cookie){
+      cookies = cookie.parse(request.headers.cookie);
+    }
+    
+    if (cookies.email === 'hello' && cookies.password === 'world'){
+      isOwner = true;
+    }
+    return isOwner;
+}
+function authStatusUI(request,response){
+  var authStatusUI = `<a href="/login">login</a>`;
+  if (authIsOwner(request,response)){
+    authStatusUI = `<a href="/logout_process">logout</a>`;
+    
+  }
+  return authStatusUI;
+}
+function notAuthrized(request,response){
+  if (authIsOwner(request,response)===false)
+      {
+        response.end('Login Required');
+        return false
+      }
+}
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -20,7 +48,7 @@ var app = http.createServer(function(request,response){
           var description = 'Hello, Node.js';
           var list = template.list(filelist); 
           var html = template.html(title, list, `<h2>${title}</h2>${description}`,
-          `<a href ="/create">create</a>`); 
+          `<a href ="/create">create</a>`,authStatusUI(request,response)); 
           // console.log(__dirname+url);
           // response.end(fs.readFileSync(__dirname + _url)) // response user data
           // Produce the data for responsing <- Power of Node.js , Django, etc. API
@@ -43,7 +71,7 @@ var app = http.createServer(function(request,response){
             <form action="/delete_process" method="POST">
             <input type="hidden" name="id" value="${title}">
             <input type= "submit" value="delete">
-            </form>`);
+            </form>`,authStatusUI(request,response));
             
             // console.log(__dirname+url);
             // response.end(fs.readFileSync(__dirname + _url)) // response user data
@@ -56,13 +84,14 @@ var app = http.createServer(function(request,response){
     }
     else if (pathname === '/create')
     {
+      notAuthrized(request,response)
       fs.readdir('./data',function(error,filelist)
         {
           var title = 'Web - Create';
           var description = 'Hello, Node.js';
           var list = template.list(filelist); 
           var html = template.html(title, list, `
-          <form action="/process_create" method="POST">
+          <form action="/create_process" method="POST">
               <p><input type="text" name="title" placeholder="title"></p>
               <p>
                 <textarea name="description" placeholder="description"></textarea>
@@ -70,7 +99,7 @@ var app = http.createServer(function(request,response){
               <p>
                <input type="submit">
               </p>
-          </form>`, ''); 
+          </form>`, '',authStatusUI(request,response)); 
           // console.log(__dirname+url);
           // response.end(fs.readFileSync(__dirname + _url)) // response user data
           // Produce the data for responsing <- Power of Node.js , Django, etc. API
@@ -78,8 +107,13 @@ var app = http.createServer(function(request,response){
           response.end(html);
        })
     }
-    else if (pathname === '/process_create')
+    else if (pathname === '/create_process')
     {
+      if (authIsOwner(request,response)===false)
+      {
+        response.end('Login Required');
+        return false
+      }
       var body = '';
       request.on('data',function(data){
         body = body + data;
@@ -100,6 +134,11 @@ var app = http.createServer(function(request,response){
     }
     else if (pathname === '/update')
     {
+      if (authIsOwner(request,response)===false)
+      {
+        response.end('Login Required');
+        return false
+      }
       var filteredId = path.parse(queryData.id).base;
       fs.readdir('./data',function(error,filelist){
         fs.readFile(`data/${filteredId}`,'utf8',function(err, description){
@@ -116,7 +155,8 @@ var app = http.createServer(function(request,response){
              <input type="submit">
             </p>
             </form>`,
-            `<a href = "/create">create</a> <a href = "/update?id=${title}">update</a>`)
+            `<a href = "/create">create</a> <a href = "/update?id=${title}">update</a>`
+            ,authStatusUI(request,response))
             response.writeHead(200);
         response.end(html);
         });//readfile
@@ -126,6 +166,11 @@ var app = http.createServer(function(request,response){
     }
     else if (pathname === '/update_process')
     {
+      if (authIsOwner(request,response)===false)
+      {
+        response.end('Login Required');
+        return false
+      }
       var body = '';
       request.on('data',function(data){
         body = body + data;
@@ -153,6 +198,11 @@ var app = http.createServer(function(request,response){
     }
     else if (pathname === '/delete_process')
     {
+      if (authIsOwner(request,response)===false)
+      {
+        response.end('Login Required');
+        return false
+      }
       var body = '';
       request.on('data',function(data){
         body = body + data;
@@ -214,6 +264,26 @@ var app = http.createServer(function(request,response){
         
       });
 
+    }
+    else if (pathname === '/logout_process')
+    {
+      var body = '';
+      request.on('data',function(data){
+        body = body + data;
+      
+      });
+      request.on('end',function(){
+        var post = qs.parse(body);
+        response.writeHead(302,{
+          'Set-cookie':[
+            `email=;Max-Age=0`,
+            `password=;Max-Age=0`,
+            `nickname=;Max-Age=0`
+          ],
+          Location:'/'
+        });
+        response.end();
+      });
     }
     else
     { 

@@ -1,0 +1,16 @@
+make_comb.c --> extern char arr[24][4]
+char result[4][4];
+main.c  -> char arr[24][4] -> argv[] ->argv[1][1] [2][3][4]
+while(arr[i] i<24)
+{
+    if(check(arr[i],argv[1]))
+        result[0]
+
+}
+
+wehiwhile() while while()
+while(1)
+{
+    check(1)
+    
+}

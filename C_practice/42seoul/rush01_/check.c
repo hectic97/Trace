@@ -1,3 +1,6 @@
+#ifndef CHECK
+#define CHECK
+
 int check(int line[],int num)
 {
     int max = 0;
@@ -15,3 +18,5 @@ int check(int line[],int num)
         return 0;
     return 1;
 }
+
+#endif

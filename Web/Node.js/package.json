@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "cookie": "^0.4.1",
+    "request": "^2.88.2",
     "sanitize-html": "^1.27.0"
   }
 }

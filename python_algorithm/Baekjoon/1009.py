@@ -7,4 +7,7 @@ for _ in range(int(input())):
             break
         iter_lst.append((lst[0]%10) ** i % 10)
         i += 1
-    print(iter_lst[lst[1] % len(iter_lst) - 1])
+    if iter_lst[lst[1] % len(iter_lst) - 1] == 0:
+        print(10)
+    else:
+        print(iter_lst[lst[1] % len(iter_lst) - 1])

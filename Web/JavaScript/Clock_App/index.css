@@ -6,3 +6,16 @@ h1 {
 body{
     background-color: black;
 }
+.clicked {
+    color: white;
+}
+
+.form,
+.greetings {
+    display: none;
+}
+
+.showing {
+    display: block;
+    color:white;
+}

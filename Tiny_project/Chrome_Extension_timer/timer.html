@@ -1,20 +1,53 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
     <head>
         <title>Timer</title>
-        <!-- <link rel = "stylesheet" href="timer.css"/> -->
+        <style>
+            body{
+                width: 400px;
+                height: 370px;
+                background-image: url('clk_invert.png');
+                background-repeat: no-repeat;
+                /* background-size: 600px 400px; */
+                background-size:cover;
+                background-position: 40% 40%;
+                background-color: black;
+                color:white;
+                text-align: center;
+                
+            }
+            input{
+                width : 30px;
+            }
+            #set{
+                width:30%;
+                position: absolute;
+                top:220px;
+                left:140px;
+                size: 180px;
+
+            }
+            form{
+                position:absolute;
+                top:100px;
+                left:120px;
+            }
+        </style>
     </head>
     <body>
         <div class = "js_timer" id = "nowTime">
-            <h1>00:00:00</h1>
+            <h1 style="position: absolute;top:130px;left:40%">00:00:00</h1>
         </div>
         <form class = "js_setTime">
             <input type = "number" id = "hour" value="0">시간
             <input type = "number" id = "min" value="0">분
             <input type = "number" id = "sec" value="0">초
-            <input type ="button" onclick="start()" value = "Start" id = 'countdown'>
-            <button onClick= "window.location.reload();">Reset Timer</button>
         </form>
+        </br>
+        <div id="buttons">
+            <button id = "set">Start</button>
+        </div>
         <script src="timer.js"></script>
     </body>
 </html>

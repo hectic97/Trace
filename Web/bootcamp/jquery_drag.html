@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<head>
+
+   <title>jQuery UI Sortable</title>
+   <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+   <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+   <style>
+      #sortable-10, #sortable-11 { list-style-type: none; 
+         margin: 0; padding: 0; width: 80%; }
+      #sortable-10 li, #sortable-11 li { margin: 0 3px 3px 3px; 
+         padding: 0.4em; padding-left: 1.5em; 
+         font-size: 17px; height: 16px; }
+      .highlight {
+         border: 1px solid #000000;
+         font-weight: bold;
+         font-size: 45px;
+         background-color: #cedc98;
+      }
+
+      .default {
+         background: #cedc98;
+         border: 1px solid #DDDDDD;
+         color: #333333;
+         }
+
+      .wrap{
+         display: table-row-group;
+         }
+      .wrap1{
+         float:left;
+         width: 100px;
+      }
+
+   </style>
+
+   <script>
+
+      $(function() {
+         $( "#sortable-10" ).sortable({
+            start: function (event, ui) {
+               $("span#result").html ($("span#result").html () 
+                  + "<b>start</b><br>");
+            },
+            receive : function (event, ui)
+            {
+               $("span#result").html ($("span#result").html () 
+                  + ", receive");
+            },
+            stop: function (event, ui) {
+               $("span#result").html ($("span#result").html () 
+                  + "<b>stop</b><br>");
+            }
+         });
+
+         $( "#sortable-11" ).sortable({
+            connectWith : "#sortable-10, #sortable-11"
+         });
+      });
+   </script>
+
+</head>
+
+<body>
+
+   <div class="wrap">
+      <div class="wrap1"> 
+         <h3>List 1</h3>
+         <ul id="sortable-10">
+            <li class="default">A</li>
+            <li class="default">B</li>
+            <p>---8.7---</p>
+            <li class="default">C</li>
+            <li class="default">D</li>
+         </ul>
+      </div>
+      <div class="wrap1">
+         <h3>List 2</h3> 
+         <ul id="sortable-11">
+            <li class="default">a</li>
+            <li class="default">b</li>
+            <p>---8.7---</p>
+            <li class="default">c</li>
+            <li class="default">d</li>
+         </ul>
+      </div>
+
+   </div>
+   <hr />
+   <span id=result></span>
+</body>
+</html>

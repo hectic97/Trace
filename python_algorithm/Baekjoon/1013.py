@@ -1,30 +1,68 @@
-N = int(input())
-def case_1(signal):
-    if len(signal) < 4 :
-        return False
-    if signal[:3] != '100':
-        return False
-    for ind in range(3,len(signal)-1):
-        if signal[ind] == '1' and signal[ind+1] == '0':
-            return ind
-    if signal[-1] == '1':
-        return len(signal)-1
-    return False
-def case_2(signal):
-    if len(signal) < 2 :
-        return False
-    if signal[0] == '0' and signal[1] == '1':
-        return True
-    return False
+def Contact(index, state, N):
+    if(state == -1):
+        print("NO")
+        return
 
-for _ in range(N):
-    signal = input()
-    while(signal)
-        if case_2(signal):
-            signal = signal[2:]
-        elif case_1(signal):
-            signal = signal[case_1(signal)+1:]
+    if(index == len(N) and (state == 5 or state == 6 or state == 7)):
+        print("YES")
+        return
+
+    if(index == len(N)):
+        print("NO")
+        return
+
+    if state == 0:
+        if(N[index] == '0'):
+            Contact(index + 1, 1, N)
         else:
+            Contact(index + 1, 2, N)
+    elif state == 1:
+        if (N[index] == '0'):
+            Contact(index + 1, -1, N)
+        else:
+            Contact(index + 1, 5, N)
+    elif state == 2:
+        if (N[index] == '0'):
+            Contact(index + 1, 3, N)
+        else:
+            Contact(index + 1, -1, N)
+    elif state == 3:
+        if (N[index] == '0'):
+            Contact(index + 1, 4, N)
+        else:
+            Contact(index + 1, -1, N)
+    elif state == 4:
+        if (N[index] == '0'):
+            Contact(index + 1, 4, N)
+        else:
+            Contact(index + 1, 6, N)
+    elif state == 5:
+        if (N[index] == '0'):
+            Contact(index + 1, 1, N)
+        else:
+            Contact(index + 1, 2, N)
+    elif state == 6:
+        if (N[index] == '0'):
+            Contact(index + 1, 1, N)
+        else:
+            Contact(index + 1, 7, N)
+    elif state == 7:
+        if (N[index] == '0'):
+            Contact(index + 1, 8, N)
+        else:
+            Contact(index + 1, 7, N)
 
+    elif state == 8:
+        if (N[index] == '0'):
+            Contact(index + 1, 4, N)
+        else:
+            Contact(index + 1, 0, N)
 
-        
+def solution():
+    N = str(input())
+    Contact(0, 0, N)
+
+T = int(input())
+
+for i in range(T):
+    solution()

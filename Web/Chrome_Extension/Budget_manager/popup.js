@@ -23,10 +23,10 @@ $(function(){
                 if (amount && newTotal >= budget.limit){
                     var notifOptions = {
                     type: 'basic',
-                    iconUrl: 'money.png',
+                    iconUrl: 'icon48.png',
                     title: 'Limit Reached!',
                     message: "STOP! Looks like you've reached your limit",
-                    priority: 1
+
                 };
                 chrome.notifications.create('limitNotif',notifOptions);
             }

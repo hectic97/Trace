@@ -8,7 +8,12 @@
     },
     "permissions": [
         "storage",
-        "notifications" 
+        "notifications",
+        "contextMenus"
     ],
+    "background": {
+        "scripts": ["eventPage.js"],
+        "persistent": false
+    },
     "options_page": "option.html"
 }

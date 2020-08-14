@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <style>
+        img {
+            display: none;
+        }
+        #e,h1,h2 {
+            text-align: center;
+        }
+        .show{
+            text-align: center;
+            display: block;
+            margin: 0px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Cafe Image Search using Kakao API</h1>
+    <div id='e'>
+        <input type="text" id = "translation">
+        <button id='trans'>Search!</button>
+        <img src="#" id ='result' width="250px" height="250px">
+        <button id='next'>Show Another Image</button>
+        <h1>Post search by Topic using Kakao API</h1>
+        <input type="text" id = "topic"><br>
+        <button id='start'>Search!</button>
+        <h2>Result</h2>
+        <textarea id='cafe' style="margin: 0px; width: 497px; height: 153px;"></textarea><br>
+        <button id = 'another'>Show Another content</button>
+    </div>   
+    <script>
+        function stripHtml(html) {
+                var tmp = document.createElement("DIV");
+                tmp.innerHTML = html;
+                return tmp.textContent || tmp.innerText || "";
+        };
+        var msg;
+        var i = 0;
+        var res;
+        var cafe_res;
+        var j = 0;
+        $('#trans').click(function(){
+                $.ajax({
+                    method: "GET",
+                    url: 'https://dapi.kakao.com/v2/search/image',
+                    data: {
+                        query : $('#translation').val(),
+                        // query : 'hello'
+                    },
+                    headers: { Authorization: "KakaoAK f46e8bed754d5f64dd7cff65e4c99389" }
+                })
+                    .done(function(msg){
+                        res = msg;
+                        $('#result').addClass('show');
+                        $('#result').attr('src',msg.documents[i].image_url);
+                    })
+            });
+        $('#next').click(function(){
+            i++;
+            $('#result').attr('src',res.documents[i].image_url);
+        });
+        $('#start').click(function(){
+                $.ajax({
+                    method: "GET",
+                    url: 'https://dapi.kakao.com/v2/search/cafe',
+                    data: {
+                        // query : $('#topic').val(),
+                        query: $('#topic').val(),
+                    },
+                    headers: { Authorization: "KakaoAK f46e8bed754d5f64dd7cff65e4c99389" }
+                })
+                    .done(function(msg){
+                        cafe_res = msg;
+                        console.log(cafe_res);
+                        $('#cafe').val(stripHtml(cafe_res.documents[j].contents));
+                        
+                    })
+            });
+        $('#another').click(function(){
+            j++;
+            $('#cafe').val(cafe_res.documents[j].contents);
+        });
+    </script>
+</body>
+
+</html>

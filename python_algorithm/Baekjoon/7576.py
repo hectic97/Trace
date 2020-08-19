@@ -1,56 +1,39 @@
-import sys
+import sys,collections
 
 dx = [-1,1,0,0]
 dy = [0,0,-1,1]
-
-def BFS(graph,start_node):
-    visit = []
-    queue = []
-    queue.append(start_node)
-    i = 1
-    s_node = start_node.split('/')
-    toma_lst[int(s_node[0])][int(s_node[1])] = 1 # need -1
+time = 1
+first_all_tomato = True
+def BFS_tomato_search(lst):
+    global time
+    global first_all_tomato
+    queue = collections.deque()
+    for n in range(N):
+        for m in range(M):
+            if lst[n][m] == 1:
+                queue.append([n,m,1])
     while queue:
-        node = queue.pop(0)
-        if node not in visit:
-            visit.append(node)
-            queue.extend(graph[node])
-            for pos in visit:
-                i += 1
-                r_pos ,c_pos= list(map(int,pos.split('/')))
-                if not toma_lst[r_pos][c_pos]:
-                    toma_lst[r_pos][c_pos] = i
-                elif toma_lst[r_pos][c_pos] > i:
-                    toma_lst[r_pos][c_pos] = i 
+        node = queue.popleft()
+        for xx, yy in zip(dx,dy):
+            if 0<=node[0]+xx<N and 0<=node[1]+yy <M:
+                if lst[node[0]+xx][node[1]+yy] == 0:
+                    queue.append([node[0]+xx,node[1]+yy,node[2]+1])
+                    time = node[2]
+                    lst[node[0]+xx][node[1]+yy] = 1
+                    first_all_tomato = False
+    
 
-    return
-
-def make_graph(lst):
-    graph = {}
-    for i in range(N):
-        for j in range(M):
-            if lst[i][j] != -1:
-                if str(i)+'/'+str(j) not in graph:
-                    graph[str(i)+'/'+str(j)] = []
-                for r_dif,c_dif in zip(dx,dy):
-                    if 0 <= i + r_dif < N and 0<= j+c_dif < M:
-                        if lst[i+r_dif][j+c_dif] != -1:
-                            graph[str(i)+'/'+str(j)].append(str(i+r_dif)+'/'+str(j+c_dif))
-    return graph
 M,N = list(map(int,input().split()))
 lst = []
-toma_lst = []
-for _ in range(N):
+for i in range(N):
     lst.append(list(map(int,sys.stdin.readline().rstrip().split())))
-    toma_lst.append([0]*M)
-print(lst)
-graph = make_graph(lst)
-for n in range(N):
-    for m in range(M):
-        if lst[n][m] == 1:
-            BFS(graph,str(n)+'/'+str(m))
-print(max(max(toma_lst))-1)
-
-
-
-
+BFS_tomato_search(lst)
+if first_all_tomato:
+    print(0)
+    exit(0)
+for ls in lst:
+    for l in ls:
+        if not l:
+            print(-1)
+            exit(0)
+print(time)

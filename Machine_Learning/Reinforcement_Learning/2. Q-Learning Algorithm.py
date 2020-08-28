@@ -8,7 +8,7 @@ register(
     id='FrozenLake-v3',
     entry_point='gym.envs.toy_text:FrozenLakeEnv',
     kwargs={'map_name':'4x4' ,'is_slippery':False}
-    )
+    ) # register info of the game
 env=gym.make('FrozenLake-v3')
 
 Q=np.zeros([env.observation_space.n,env.action_space.n])
@@ -21,7 +21,6 @@ for i in range(num_episodes):
     rAll=0
     done=False
     e= 1./((i//100)+1)  # Decay E-greedy
-
 
     while not done:
         if np.random.rand(1)<e:

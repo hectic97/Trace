@@ -16,5 +16,5 @@ def recur(lst,r,c):
     lst[r][c]=1
     lst_1 = [[r for r in row] for row in lst]
     lst_2 = [[r for r in row] for row in lst]
-    lst_1[]
+    # lst_1
 
